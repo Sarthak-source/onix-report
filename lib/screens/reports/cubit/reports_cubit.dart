@@ -1036,6 +1036,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
         headers: reversedHeaders,
         data: reversedData,
         headerDirection: pw.TextDirection.rtl,
+        tableDirection:pw.TextDirection.rtl,
         headerStyle: pw.TextStyle(
             font: font['regularFont'],
             fontWeight: pw.FontWeight.bold,
@@ -1048,7 +1049,8 @@ class PdfFormCubit extends Cubit<PdfFormState> {
           horizontalInside: pw.BorderSide(color: PdfColors.white),
           verticalInside: pw.BorderSide(color: PdfColors.white),
         ),
-        cellStyle: pw.TextStyle(font: font['regularFont'], fontSize: 9),
+        cellStyle: pw.TextStyle(font: font['regularFont'], fontSize: 9,),
+        
         cellDecoration: (index, data, rowNum) {
           return pw.BoxDecoration(
             color: (rowNum % 2 == 0)
