@@ -24,7 +24,7 @@ Map<String, String> arLang = {
   'quantity': 'الكمية',
   'free_quantity': 'الكمية المجانية',
   'price': 'السعر',
-  'vat': 'ضريبة قيمة مضافة %',
+  'vat': 'ض.ق.م %',
   'total': 'الإجمالي',
   'page': 'صفحة',
   'from': 'من',

@@ -888,6 +888,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'name'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -897,6 +898,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'address'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -906,6 +908,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'city'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -915,6 +918,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'country'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -924,6 +928,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'postal_code'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -933,6 +938,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'tax_no'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -942,6 +948,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'tax_crn'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -951,6 +958,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'other'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -981,6 +989,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
               'client'.tr,
               textDirection: pw.TextDirection.rtl,
               style: pw.TextStyle(
+
                 font: font['regularFont'],
                 fontSize: 12,
                 color: const PdfColor.fromInt(0xFFFF0000),
@@ -996,6 +1005,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         '${state.clientName}',
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#000000'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1005,6 +1015,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         '${state.clientAddress}',
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#000000'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1014,6 +1025,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         '${state.clientCity}',
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#000000'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1023,6 +1035,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         '${state.clientCountry}',
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#000000'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1032,6 +1045,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         '${state.clientPostalCode}',
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#000000'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1041,6 +1055,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         '${state.clientTaxNO}',
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#000000'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1050,6 +1065,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         '${state.clientTaxCRN}',
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#000000'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1059,6 +1075,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         '${state.clientOther}',
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#000000'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1075,6 +1092,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'name'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1084,6 +1102,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'address'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1093,6 +1112,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'city'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1102,6 +1122,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'country'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1111,6 +1132,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'postal_code'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1120,6 +1142,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'tax_no'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1129,6 +1152,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'tax_crn'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1138,6 +1162,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                       pw.Text(
                         'other'.tr,
                         style: pw.TextStyle(
+                          color: PdfColor.fromHex('#474747'),
                           font: font['regularFont'],
                           fontSize: 10,
                           letterSpacing: 0.5,
@@ -1214,6 +1239,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
         data: reversedData,
         headerDirection: pw.TextDirection.rtl,
         tableDirection: pw.TextDirection.rtl,
+
         headerStyle: pw.TextStyle(
             font: font['regularFont'],
             fontWeight: pw.FontWeight.bold,
@@ -1221,10 +1247,10 @@ class PdfFormCubit extends Cubit<PdfFormState> {
             color: const PdfColor(1, 1, 1)),
         headerDecoration: const pw.BoxDecoration(
             color: PdfColor(220 / 255, 41 / 255, 47 / 255)),
-        cellAlignment: isRtl ? pw.Alignment.centerRight : pw.Alignment.center,
+        cellAlignment: pw.Alignment.center,
         border: const pw.TableBorder(
-          horizontalInside: pw.BorderSide(color: PdfColors.white),
-          verticalInside: pw.BorderSide(color: PdfColors.white),
+          horizontalInside: pw.BorderSide(color: PdfColors.grey200),
+          verticalInside: pw.BorderSide(color: PdfColors.grey200),
         ),
         cellStyle: pw.TextStyle(
           font: font['regularFont'],

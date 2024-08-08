@@ -78,35 +78,40 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(8.0), // Add padding as needed
-        child: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            labelText: key.tr, // Use key.tr for localization
-            filled: true,
-            fillColor: const Color.fromARGB(
-                255, 252, 237, 255), // Lighter background color
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0), // Rounded border
-              borderSide: BorderSide.none, // No border line
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                  12.0), // Rounded border for focused state
-              borderSide: const BorderSide(
-                color: Colors.purpleAccent, // Border color when focused
-                width: 1.5, // Border width when focused
+        child: Center(
+          child: TextField(
+
+            textAlign: TextAlign.center,
+            controller: controller,
+            decoration: InputDecoration(
+
+              labelText: key.tr, // Use key.tr for localization
+              filled: true,
+              fillColor: const Color.fromARGB(
+                  255, 252, 237, 255), // Lighter background color
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0), // Rounded border
+                borderSide: BorderSide.none, // No border line
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                    12.0), // Rounded border for focused state
+                borderSide: const BorderSide(
+                  color: Colors.purpleAccent, // Border color when focused
+                  width: 1.5, // Border width when focused
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                    12.0), // Rounded border for enabled state
+                borderSide: const BorderSide(
+                  color: Colors.transparent, // Border color when enabled
+                  width: 1.0, // Border width when enabled
+                ),
               ),
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                  12.0), // Rounded border for enabled state
-              borderSide: const BorderSide(
-                color: Colors.transparent, // Border color when enabled
-                width: 1.0, // Border width when enabled
-              ),
-            ),
+            onChanged: onChanged,
           ),
-          onChanged: onChanged,
         ),
       ),
     );
@@ -327,7 +332,9 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                           columnSpacing:(Get.width/500)*0.01,
                             
                             columns: [
-                              DataColumn(label: Text('description'.tr,)),
+                              DataColumn(
+
+                                  label: Text('description'.tr,)),
                               DataColumn(label: Text('unit'.tr)),
                               DataColumn(label: Text('quantity'.tr)),
                               DataColumn(label: Text('price'.tr)),
@@ -338,13 +345,19 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                               final total = item.price *
                                   item.quantity *
                                   (1 + item.vat / 100);
-                              return DataRow(cells: [
-                                DataCell(Text(item.description)),
-                                DataCell(Text(item.unit)),
-                                DataCell(Text(item.quantity.toString())),
-                                DataCell(Text(item.price.toStringAsFixed(2))),
-                                DataCell(Text(item.vat.toStringAsFixed(2))),
-                                DataCell(Text(total.toStringAsFixed(2))),
+                              return DataRow(
+
+
+                                  cells: [
+                                DataCell(
+
+
+                                    Text(item.description,textAlign: TextAlign.center,),),
+                                DataCell(Text(item.unit,textAlign: TextAlign.center,)),
+                                DataCell(Text(item.quantity.toString(),textAlign: TextAlign.center,),),
+                                DataCell(Text(item.price.toStringAsFixed(2),textAlign: TextAlign.center,)),
+                                DataCell(Text(item.vat.toStringAsFixed(2),textAlign: TextAlign.center,)),
+                                DataCell(Text(total.toStringAsFixed(2),textAlign: TextAlign.center,)),
                               ]);
                             }).toList(),
                           ),
