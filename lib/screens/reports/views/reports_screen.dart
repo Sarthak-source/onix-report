@@ -16,6 +16,8 @@ class PdfFormWidget extends StatefulWidget {
 }
 
 class PdfFormWidgetState extends State<PdfFormWidget> {
+  final _formKey = GlobalKey<FormState>();
+
   final _supplierNameController = TextEditingController();
   final _clientNameController = TextEditingController();
   final _supplierAddressController = TextEditingController();
@@ -73,44 +75,135 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
     super.dispose();
   }
 
-  Widget buildTextField(TextEditingController controller, String key,
-      Function(String) onChanged) {
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController controller) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        controller.text = "${picked.toLocal()}".split(' ')[0];
+      });
+    }
+  }
+
+  bool isNumeric(String s) {
+    return double.tryParse(s) != null;
+  }
+
+  String? validateField(
+      String? value, bool Function(String?) condition, String errorMessageKey) {
+    if (condition(value)) {
+      return errorMessageKey.tr; // Return the localized error message
+    }
+    return null; // No error, return null
+  }
+
+  Widget buildTextFormField(
+      TextEditingController controller,
+      String key,
+      bool isNumericField,
+      String? Function(String?)? validator,
+      Function(String) onChanged,
+      {bool isDateField = false}) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(8.0), // Add padding as needed
+        padding: const EdgeInsets.all(8.0),
         child: Center(
-          child: TextField(
+          child: GestureDetector(
+            onTap: isDateField ? () => _selectDate(context, controller) : null,
+            child: AbsorbPointer(
+              absorbing: isDateField,
+              child: TextFormField(
+                textAlign: TextAlign.center,
+                controller: controller,
+                keyboardType:
+                    isNumericField ? TextInputType.number : TextInputType.text,
+                decoration: InputDecoration(
+                  labelText: key.tr,
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 252, 237, 255),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: const BorderSide(
+                      color: Colors.purpleAccent,
+                      width: 1.5,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: const BorderSide(
+                      color: Colors.transparent,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                validator: validator,
+                onChanged: onChanged,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-            textAlign: TextAlign.center,
-            controller: controller,
+  Widget buildDropdownFormField(
+    TextEditingController controller,
+    String key,
+    List<String> options, // List of dropdown options
+    String? Function(String?)? validator,
+    Function(String?) onChanged,
+  ) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: DropdownButtonFormField<String>(
+            value: controller.text.isEmpty ? null : controller.text,
             decoration: InputDecoration(
-
-              labelText: key.tr, // Use key.tr for localization
+              labelText: key.tr,
               filled: true,
-              fillColor: const Color.fromARGB(
-                  255, 252, 237, 255), // Lighter background color
+              fillColor: const Color.fromARGB(255, 252, 237, 255),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0), // Rounded border
-                borderSide: BorderSide.none, // No border line
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide.none,
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                    12.0), // Rounded border for focused state
+                borderRadius: BorderRadius.circular(12.0),
                 borderSide: const BorderSide(
-                  color: Colors.purpleAccent, // Border color when focused
-                  width: 1.5, // Border width when focused
+                  color: Colors.purpleAccent,
+                  width: 1.5,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                    12.0), // Rounded border for enabled state
+                borderRadius: BorderRadius.circular(12.0),
                 borderSide: const BorderSide(
-                  color: Colors.transparent, // Border color when enabled
-                  width: 1.0, // Border width when enabled
+                  color: Colors.transparent,
+                  width: 1.0,
                 ),
               ),
             ),
-            onChanged: onChanged,
+            items: options.map((String option) {
+              return DropdownMenuItem<String>(
+                value: option,
+                child: Text(option.tr),
+              );
+            }).toList(),
+            validator: validator,
+            onChanged: (String? newValue) {
+              setState(() {
+                controller.text = newValue ?? '';
+              });
+              onChanged(newValue);
+            },
           ),
         ),
       ),
@@ -140,269 +233,441 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: <Widget>[
-                buildRow([
-                  buildTextField(
-                      _supplierNameController,
-                      'supplier_name', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(supplierName: value)),
-                  buildTextField(
-                      _clientNameController,
-                      'client_name', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(clientName: value)),
-                  buildTextField(
-                      _supplierAddressController,
-                      'supplier_address', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(supplierAddress: value)),
-                ]),
-                buildRow([
-                  buildTextField(
-                      _supplierCityController,
-                      'supplier_city', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(supplierCity: value)),
-                  buildTextField(
-                      _supplierCountryController,
-                      'supplier_country', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(supplierCountry: value)),
-                  buildTextField(
-                      _supplierPostalCodeController,
-                      'supplier_postal_code', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(supplierPostalCode: value)),
-                ]),
-                buildRow([
-                  buildTextField(
-                      _supplierTaxNoController,
-                      'supplier_tax_no', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(supplierTaxNo: value)),
-                  buildTextField(
-                      _supplierTaxCrnController,
-                      'supplier_tax_crn', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(supplierTaxCrn: value)),
-                  buildTextField(
-                      _supplierOtherController,
-                      'supplier_other', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(supplierOther: value)),
-                ]),
-                buildRow([
-                  buildTextField(
-                      _clientAddressController,
-                      'client_address', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(clientAddress: value)),
-                  buildTextField(
-                      _clientCityController,
-                      'client_city', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(clientCity: value)),
-                  buildTextField(
-                      _clientCountryController,
-                      'client_country', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(clientCountry: value)),
-                ]),
-                buildRow([
-                  buildTextField(
-                      _clientPostalCodeController,
-                      'client_postal_code', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(clientPostalCode: value)),
-                  buildTextField(
-                      _clientTaxNoController,
-                      'client_tax_no', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(clientTaxNo: value)),
-                  buildTextField(
-                      _clientTaxCrnController,
-                      'client_tax_crn', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(clientTaxCrn: value)),
-                ]),
-                buildRow([
-                  buildTextField(
-                      _clientOtherController,
-                      'client_other', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(clientOther: value)),
-                  buildTextField(
-                      _invoiceDateController,
-                      'invoice_date', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(invoiceDate: value)),
-                  buildTextField(
-                      _dueDateController,
-                      'due_date', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(dueDate: value)),
-                ]),
-                buildRow([
-                  buildTextField(
-                      _paymentMethodController,
-                      'payment_method', // Use key for localization
-                      (value) => context
-                          .read<PdfFormCubit>()
-                          .updateForm(paymentMethod: value)),
-                ]),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Column(
-                            children: [
-                              buildRow([
-                                buildTextField(
-                                    _unitController,
-                                    'unit', // Use key for localization
-                                    (value) {}),
-                                buildTextField(
-                                    _quantityController,
-                                    'quantity', // Use key for localization
-                                    (value) {}),
-                                buildTextField(
-                                    _priceController,
-                                    'price', // Use key for localization
-                                    (value) {}),
-                              ]),
-                              buildRow([
-                                buildTextField(
-                                    _vatController,
-                                    'vat', // Use key for localization
-                                    (value) {}),
-                                buildTextField(
-                                    _descriptionController,
-                                    'description', // Use key for localization
-                                    (value) {}),
-                              ]),
-                              const SizedBox(height: 12),
-                              ElevatedButton(
-                                onPressed: () {
-                                  final item = InvoiceItem(
-                                    description: _descriptionController.text,
-                                    unit: _unitController.text,
-                                    quantity: int.parse(_quantityController.text),
-                                    price: double.parse(_priceController.text),
-                                    vat: double.parse(_vatController.text),
-                                  );
-                                  context.read<PdfFormCubit>().addItem(item);
-                                },
-                                child: Text('add_items'.tr), // Use key.tr for button text
-                              ),
-                              const SizedBox(height: 12),
-                            ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  buildRow([
+                    buildTextFormField(
+                        _supplierNameController,
+                        'supplier_name',
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(supplierName: value)),
+                    buildTextFormField(
+                        _clientNameController,
+                        'client_name', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(clientName: value)),
+                    buildTextFormField(
+                        _supplierAddressController,
+                        'supplier_address', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(supplierAddress: value)),
+                  ]),
+                  buildRow([
+                    buildTextFormField(
+                        _supplierCityController,
+                        'supplier_city', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(supplierCity: value)),
+                    buildDropdownFormField(
+                        _supplierCountryController,
+                        'supplier_country', // Use key for localization
+                        [
+                          "united_states".tr,
+                          "canada".tr,
+                          "united_kingdom".tr,
+                          "australia".tr,
+                          "germany".tr,
+                          "france".tr,
+                          "italy".tr,
+                          "spain".tr,
+                          "china".tr,
+                          "japan".tr,
+                          "south_korea".tr,
+                          "india".tr,
+                          "brazil".tr,
+                          "mexico".tr,
+                          "south_africa".tr,
+                          "saudi_arabia".tr,
+                          "egypt".tr,
+                          "united_arab_emirates".tr,
+                        ],
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(supplierCountry: value)),
+                    buildTextFormField(
+                        _supplierPostalCodeController,
+                        'supplier_postal_code', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(supplierPostalCode: value)),
+                  ]),
+                  buildRow([
+                    buildTextFormField(
+                        _supplierTaxNoController,
+                        'supplier_tax_no', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(supplierTaxNo: value)),
+                    buildTextFormField(
+                        _supplierTaxCrnController,
+                        'supplier_tax_crn', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(supplierTaxCrn: value)),
+                    buildTextFormField(
+                        _supplierOtherController,
+                        'supplier_other', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(supplierOther: value)),
+                  ]),
+                  buildRow([
+                    buildTextFormField(
+                        _clientAddressController,
+                        'client_address', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(clientAddress: value)),
+                    buildTextFormField(
+                        _clientCityController,
+                        'client_city', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(clientCity: value)),
+                    buildDropdownFormField(
+                        _clientCountryController,
+                        'client_country', // Use key for localization
+                        [
+                          "united_states".tr,
+                          "canada".tr,
+                          "united_kingdom".tr,
+                          "australia".tr,
+                          "germany".tr,
+                          "france".tr,
+                          "italy".tr,
+                          "spain".tr,
+                          "china".tr,
+                          "japan".tr,
+                          "south_korea".tr,
+                          "india".tr,
+                          "brazil".tr,
+                          "mexico".tr,
+                          "south_africa".tr,
+                          "saudi_arabia".tr,
+                          "egypt".tr,
+                          "united_arab_emirates".tr,
+                        ],
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(clientCountry: value)),
+                  ]),
+                  buildRow([
+                    buildTextFormField(
+                        _clientPostalCodeController,
+                        'client_postal_code', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(clientPostalCode: value)),
+                    buildTextFormField(
+                        _clientTaxNoController,
+                        'client_tax_no', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(clientTaxNo: value)),
+                    buildTextFormField(
+                        _clientTaxCrnController,
+                        'client_tax_crn', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(clientTaxCrn: value)),
+                  ]),
+                  buildRow([
+                    buildTextFormField(
+                        _clientOtherController,
+                        'client_other', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(clientOther: value)),
+                    buildTextFormField(
+                        isDateField: true,
+                        _invoiceDateController,
+                        'invoice_date', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(invoiceDate: value)),
+                    buildTextFormField(
+                        isDateField: true,
+                        _dueDateController,
+                        'due_date', // Use key for localization
+                        false,
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(dueDate: value)),
+                  ]),
+                  buildRow([
+                    buildDropdownFormField(
+                        _paymentMethodController,
+                        'payment_method', // Use key for localization
+                        [
+                          "cash".tr,
+                          "bank".tr,
+                          "installments".tr,
+                          "account".tr,
+                          "coupons".tr,
+                          "points".tr,
+                        ],
+                        (value) => validateField(value,
+                            (v) => v == null || v.isEmpty, "field_required".tr),
+                        (value) => context
+                            .read<PdfFormCubit>()
+                            .updateForm(paymentMethod: value)),
+                  ]),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Column(
+                              children: [
+                                buildRow([
+                                  buildTextFormField(
+                                      _unitController,
+                                      'unit', // Use key for localization
+                                      false,
+                                      (value) => validateField(
+                                          value,
+                                          (v) => v == null || v.isEmpty,
+                                          "field_required".tr),
+                                      (value) {}),
+                                  buildTextFormField(
+                                      _quantityController,
+                                      'quantity', // Use key for localization
+                                      false,
+                                      (value) => validateField(
+                                          value,
+                                          (v) => v == null || v.isEmpty,
+                                          "field_required".tr),
+                                      (value) {}),
+                                  buildTextFormField(
+                                      _priceController,
+                                      'price', // Use key for localization
+                                      false,
+                                      (value) => validateField(
+                                          value,
+                                          (v) => v == null || v.isEmpty,
+                                          "field_required".tr),
+                                      (value) {}),
+                                ]),
+                                buildRow([
+                                  buildTextFormField(
+                                      _vatController,
+                                      'vat', // Use key for localization
+                                      false,
+                                      (value) => validateField(
+                                          value,
+                                          (v) => v == null || v.isEmpty,
+                                          "field_required".tr),
+                                      (value) {}),
+                                  buildTextFormField(
+                                      _descriptionController,
+                                      'description', // Use key for localization
+                                      false,
+                                      (value) => validateField(
+                                          value,
+                                          (v) => v == null || v.isEmpty,
+                                          "field_required".tr),
+                                      (value) {}),
+                                ]),
+                                const SizedBox(height: 12),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    final item = InvoiceItem(
+                                      description: _descriptionController.text,
+                                      unit: _unitController.text,
+                                      quantity:
+                                          int.parse(_quantityController.text),
+                                      price:
+                                          double.parse(_priceController.text),
+                                      vat: double.parse(_vatController.text),
+                                    );
+                                    context.read<PdfFormCubit>().addItem(item);
+                                  },
+                                  child: Text('add_items'
+                                      .tr), // Use key.tr for button text
+                                ),
+                                const SizedBox(height: 12),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Card(
-                        child:  DataTable(
-                          columnSpacing:(Get.width/500)*0.01,
-                            
+                      Expanded(
+                        child: Card(
+                          child: DataTable(
+                            columnSpacing: (Get.width / 500) * 0.01,
                             columns: [
                               DataColumn(
-
-                                  label: Text('description'.tr,)),
+                                  label: Text(
+                                'description'.tr,
+                              )),
                               DataColumn(label: Text('unit'.tr)),
                               DataColumn(label: Text('quantity'.tr)),
                               DataColumn(label: Text('price'.tr)),
                               DataColumn(label: Text('vat'.tr)),
-                              DataColumn(label: Text('total'.tr)), // Total column might need to be added in localization
+                              DataColumn(
+                                  label: Text('total'
+                                      .tr)), // Total column might need to be added in localization
                             ],
                             rows: state.items.map((item) {
                               final total = item.price *
                                   item.quantity *
                                   (1 + item.vat / 100);
-                              return DataRow(
-
-
-                                  cells: [
+                              return DataRow(cells: [
                                 DataCell(
-
-
-                                    Text(item.description,textAlign: TextAlign.center,),),
-                                DataCell(Text(item.unit,textAlign: TextAlign.center,)),
-                                DataCell(Text(item.quantity.toString(),textAlign: TextAlign.center,),),
-                                DataCell(Text(item.price.toStringAsFixed(2),textAlign: TextAlign.center,)),
-                                DataCell(Text(item.vat.toStringAsFixed(2),textAlign: TextAlign.center,)),
-                                DataCell(Text(total.toStringAsFixed(2),textAlign: TextAlign.center,)),
+                                  Text(
+                                    item.description,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                DataCell(Text(
+                                  item.unit,
+                                  textAlign: TextAlign.center,
+                                )),
+                                DataCell(
+                                  Text(
+                                    item.quantity.toString(),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                DataCell(Text(
+                                  item.price.toStringAsFixed(2),
+                                  textAlign: TextAlign.center,
+                                )),
+                                DataCell(Text(
+                                  item.vat.toStringAsFixed(2),
+                                  textAlign: TextAlign.center,
+                                )),
+                                DataCell(Text(
+                                  total.toStringAsFixed(2),
+                                  textAlign: TextAlign.center,
+                                )),
                               ]);
                             }).toList(),
                           ),
                         ),
-                      
-                    ),
+                      ),
+                    ],
+                  ),
+                  if (kIsWeb) ...[
+                    if (state.logoImageBytes != null)
+                      Image.memory(state.logoImageBytes!,
+                          height: 30, width: 30),
+                    if (state.qrCodeImageBytes != null)
+                      Image.memory(state.qrCodeImageBytes!,
+                          height: 30, width: 30),
+                  ] else ...[
+                    if (state.logoImageFile != null)
+                      Image.file(state.logoImageFile!, height: 30, width: 30),
+                    if (state.qrCodeImageFile != null)
+                      Image.file(state.qrCodeImageFile!, height: 30, width: 30),
                   ],
-                ),
-                if (kIsWeb) ...[
-                  if (state.logoImageBytes != null)
-                    Image.memory(state.logoImageBytes!, height: 30, width: 30),
-                  if (state.qrCodeImageBytes != null)
-                    Image.memory(state.qrCodeImageBytes!,
-                        height: 30, width: 30),
-                ] else ...[
-                  if (state.logoImageFile != null)
-                    Image.file(state.logoImageFile!, height: 30, width: 30),
-                  if (state.qrCodeImageFile != null)
-                    Image.file(state.qrCodeImageFile!, height: 30, width: 30),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => context
+                            .read<PdfFormCubit>()
+                            .pickImage(isLogo: true),
+                        child: Text(
+                            'pick_logo_image'.tr), // Use key.tr for button text
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      ElevatedButton(
+                        onPressed: () => context
+                            .read<PdfFormCubit>()
+                            .pickImage(isLogo: false),
+                        child: Text('pick_qr_code_image'
+                            .tr), // Use key.tr for button text
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (!_formKey.currentState!.validate()) {
+                        await context.read<PdfFormCubit>().generatePdf(context);
+                      } else {
+                        Get.showSnackbar(
+                          const GetSnackBar(
+                            title: 'Title', // Optional: Add a title
+                            message: 'This is a snackbar message.',
+                            duration: Duration(
+                                seconds:
+                                    3), // Duration the snackbar will be displayed
+                          ),
+                        );
+                      }
+                    },
+                    child:
+                        Text('generate_pdf'.tr), // Use key.tr for button text
+                  ),
                 ],
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () =>
-                          context.read<PdfFormCubit>().pickImage(isLogo: true),
-                      child: Text('pick_logo_image'.tr), // Use key.tr for button text
-                    ),
-                    const SizedBox(width: 10,),
-                    ElevatedButton(
-                      onPressed: () =>
-                          context.read<PdfFormCubit>().pickImage(isLogo: false),
-                      child: Text('pick_qr_code_image'.tr), // Use key.tr for button text
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    await context.read<PdfFormCubit>().generatePdf(context);
-                  },
-                  child: Text('generate_pdf'.tr), // Use key.tr for button text
-                ),
-              ],
+              ),
             ),
           ),
         );

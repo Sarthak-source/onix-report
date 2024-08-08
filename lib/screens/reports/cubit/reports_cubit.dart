@@ -354,7 +354,6 @@ class PdfFormCubit extends Cubit<PdfFormState> {
             qrCodeImageFile = file;
           }
           emit(PdfFormInitial(
-
             supplierName: state.supplierName,
             clientName: state.clientName,
             items: state.items,
@@ -559,7 +558,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                 letterSpacing: 0.5,
                 fontSize: 10,
               )),
-          pw.Text('24/7/2024 - 10:00:00 PM',
+          pw.Text('${state.invoiceDate} - 10:00:00 PM',
               textDirection: pw.TextDirection.rtl,
               style: pw.TextStyle(
                 font: font['regularFont'],
@@ -579,7 +578,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                 letterSpacing: 0.5,
                 fontSize: 10,
               )),
-          pw.Text('28/7/2024',
+          pw.Text('${state.dueDate}',
               textDirection: pw.TextDirection.rtl,
               style: pw.TextStyle(
                 font: font['regularFont'],
@@ -770,404 +769,449 @@ class PdfFormCubit extends Cubit<PdfFormState> {
     String? currentLocale = Get.locale?.languageCode;
 
     final suplierBox = pw.Expanded(
-      child: pw.Container(
-        decoration: const pw.BoxDecoration(
-          color: PdfColor.fromInt(0xFFF9F9F9),
-          borderRadius: pw.BorderRadius.all(pw.Radius.circular(8)),
+  child: pw.Container(
+    decoration: const pw.BoxDecoration(
+      color: PdfColor.fromInt(0xFFF9F9F9),
+      borderRadius: pw.BorderRadius.all(pw.Radius.circular(8)),
+    ),
+    padding: const pw.EdgeInsets.all(10),
+    child: pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.end,
+      children: [
+        pw.Text(
+          'supplier_info'.tr,
+          textDirection: pw.TextDirection.rtl,
+          style: pw.TextStyle(
+            font: font['regularFont'],
+            letterSpacing: 0.5,
+            fontSize: 12,
+            color: const PdfColor.fromInt(0xFFFF0000),
+          ),
         ),
-        padding: const pw.EdgeInsets.all(10),
-        child: pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.end,
+        pw.Divider(color: PdfColor.fromHex('#e3e2e3')),
+        pw.Table(
+          columnWidths: {
+            0: pw.FlexColumnWidth(1),
+            1: pw.FlexColumnWidth(1),
+          },
           children: [
-            pw.Text(
-              'supplier_info'.tr,
-              textDirection: pw.TextDirection.rtl,
-              style: pw.TextStyle(
-                font: font['regularFont'],
-                letterSpacing: 0.5,
-                fontSize: 12,
-                color: const PdfColor.fromInt(0xFFFF0000),
-              ),
-            ),
-            pw.Divider(color: PdfColor.fromHex('#e3e2e3')),
-            pw.Row(
+            pw.TableRow(
               children: [
-                pw.Expanded(
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.end,
-                    children: [
-                      pw.Text(
-                        '${state.supplierName}',
-                        style: pw.TextStyle(
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.supplierAddress}',
-                        style: pw.TextStyle(
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.supplierCity}',
-                        style: pw.TextStyle(
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.supplierCountry}',
-                        style: pw.TextStyle(
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.supplierPostalCode}',
-                        style: pw.TextStyle(
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.supplierTaxNO}',
-                        style: pw.TextStyle(
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.supplierTaxCRN}',
-                        style: pw.TextStyle(
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.supplierOther}',
-                        style: pw.TextStyle(
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                    ],
+                pw.Text(
+                  '${state.supplierName}',
+                  style: pw.TextStyle(
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
                   ),
+                  textDirection: pw.TextDirection.rtl,
                 ),
-                pw.Expanded(
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.end,
-                    children: [
-                      pw.Text(
-                        'name'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'address'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'city'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'country'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'postal_code'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'tax_no'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'tax_crn'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'other'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                    ],
+                pw.Text(
+                  'name'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
                   ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.supplierAddress}',
+                  style: pw.TextStyle(
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'address'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.supplierCity}',
+                  style: pw.TextStyle(
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'city'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.supplierCountry}',
+                  style: pw.TextStyle(
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'country'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.supplierPostalCode}',
+                  style: pw.TextStyle(
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'postal_code'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.supplierTaxNO}',
+                  style: pw.TextStyle(
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'tax_no'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.supplierTaxCRN}',
+                  style: pw.TextStyle(
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'tax_crn'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.supplierOther}',
+                  style: pw.TextStyle(
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'other'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
                 ),
               ],
             ),
           ],
         ),
-      ),
-    );
+      ],
+    ),
+  ),
+);
+
 
     final clientBox = pw.Expanded(
-      child: pw.Container(
-        decoration: const pw.BoxDecoration(
-          color: PdfColor.fromInt(0xFFF9F9F9),
-          borderRadius: pw.BorderRadius.all(pw.Radius.circular(8)),
+  child: pw.Container(
+    decoration: const pw.BoxDecoration(
+      color: PdfColor.fromInt(0xFFF9F9F9),
+      borderRadius: pw.BorderRadius.all(pw.Radius.circular(8)),
+    ),
+    padding: const pw.EdgeInsets.all(10),
+    child: pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.end,
+      children: [
+        pw.Text(
+          'client'.tr,
+          textDirection: pw.TextDirection.rtl,
+          style: pw.TextStyle(
+            font: font['regularFont'],
+            fontSize: 12,
+            color: const PdfColor.fromInt(0xFFFF0000),
+          ),
         ),
-        padding: const pw.EdgeInsets.all(10),
-        child: pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.end,
+        pw.Divider(color: PdfColor.fromHex('#e3e2e3')),
+        pw.Table(
+          columnWidths: {
+            0: pw.FlexColumnWidth(1),
+            1: pw.FlexColumnWidth(1),
+          },
           children: [
-            pw.Text(
-              'client'.tr,
-              textDirection: pw.TextDirection.rtl,
-              style: pw.TextStyle(
-
-                font: font['regularFont'],
-                fontSize: 12,
-                color: const PdfColor.fromInt(0xFFFF0000),
-              ),
-            ),
-            pw.Divider(color: PdfColor.fromHex('#e3e2e3')),
-            pw.Row(
+            pw.TableRow(
               children: [
-                pw.Expanded(
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.end,
-                    children: [
-                      pw.Text(
-                        '${state.clientName}',
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#000000'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.clientAddress}',
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#000000'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.clientCity}',
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#000000'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.clientCountry}',
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#000000'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.clientPostalCode}',
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#000000'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.clientTaxNO}',
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#000000'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.clientTaxCRN}',
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#000000'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        '${state.clientOther}',
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#000000'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                    ],
+                pw.Text(
+                  '${state.clientName}',
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#000000'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
                   ),
+                  textDirection: pw.TextDirection.rtl,
                 ),
-                pw.Expanded(
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.end,
-                    children: [
-                      pw.Text(
-                        'name'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'address'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'city'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'country'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'postal_code'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'tax_no'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'tax_crn'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                      pw.Text(
-                        'other'.tr,
-                        style: pw.TextStyle(
-                          color: PdfColor.fromHex('#474747'),
-                          font: font['regularFont'],
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        textDirection: pw.TextDirection.rtl,
-                      ),
-                    ],
+                pw.Text(
+                  'name'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
                   ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.clientAddress}',
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#000000'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'address'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.clientCity}',
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#000000'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'city'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.clientCountry}',
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#000000'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'country'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.clientPostalCode}',
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#000000'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'postal_code'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.clientTaxNO}',
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#000000'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'tax_no'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.clientTaxCRN}',
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#000000'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'tax_crn'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+              ],
+            ),
+            pw.TableRow(
+              children: [
+                pw.Text(
+                  '${state.clientOther}',
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#000000'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
+                ),
+                pw.Text(
+                  'other'.tr,
+                  style: pw.TextStyle(
+                    color: PdfColor.fromHex('#474747'),
+                    font: font['regularFont'],
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                  textDirection: pw.TextDirection.rtl,
                 ),
               ],
             ),
           ],
         ),
-      ),
-    );
+      ],
+    ),
+  ),
+);
+
 
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -1229,7 +1273,6 @@ class PdfFormCubit extends Cubit<PdfFormState> {
         data: reversedData,
         headerDirection: pw.TextDirection.rtl,
         tableDirection: pw.TextDirection.rtl,
-
         headerStyle: pw.TextStyle(
             font: font['regularFont'],
             fontWeight: pw.FontWeight.bold,
