@@ -364,6 +364,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
             qrCodeImageFile = file;
           }
           emit(PdfFormInitial(
+
             supplierName: state.supplierName,
             clientName: state.clientName,
             items: state.items,
@@ -608,7 +609,7 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                 letterSpacing: 0.5,
                 fontSize: 10,
               )),
-          pw.Text('cash'.tr,
+          pw.Text(state.paymentMethod.toString().tr,
               textDirection: pw.TextDirection.rtl,
               style: pw.TextStyle(
                 font: font['regularFont'],
