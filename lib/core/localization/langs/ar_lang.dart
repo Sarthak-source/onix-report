@@ -29,11 +29,13 @@ Map<String, String> arLang = {
   'page': 'صفحة',
   'from': 'من',
   'all_rights_reserved': 'جميع الحقوق محفوظة لدي شركة Ultimate Solutions',
-  'total_amount': 'الإجمالي: 91.30 SAR',
-  'discount': 'الخصم: 0.00',
-  'tax_total': 'إجمالي الضريبة: 13.70',
-  'burden_total': 'إجمالي الأعباء: 0.00',
-  'total_with_tax': 'الإجمالي بالضريبة: 105 SAR',
+  
+  'total_amount': 'الإجمالي: @amount@ SAR',
+  'discount': 'الخصم: @discount@',
+  'tax_total': 'إجمالي الضريبة: @tax@',
+  'burden_total': 'إجمالي الأعباء: @burden@',
+  'total_with_tax': 'الإجمالي بالضريبة: @total_with_tax@ SAR',
+
   'amount_in_words': 'مائة وخمسة ريال سعودي فقط',
   'postal_code': 'الرمز البريدي',
   'tax_no': 'الرقم الضريبي',

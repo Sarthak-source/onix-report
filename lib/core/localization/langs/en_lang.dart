@@ -29,11 +29,13 @@ Map<String, String> enLang = {
   "all_rights_reserved": "All rights reserved by Ultimate Solutions",
   'page': 'Page',
   'from': 'From',
-  "total_amount": "Total Amount: 91.30 SAR",
-  "discount": "Discount: 0.00",
-  "tax_total": "Tax Total: 13.70",
-  "burden_total": "Burden Total: 0.00",
-  "total_with_tax": "Total with Tax: 105 SAR",
+
+  "total_amount": "Total Amount: @amount@ SAR",
+  "discount": "Discount: @discount@",
+  "tax_total": "Tax Total: @tax@",
+  "burden_total": "Burden Total: @burden@",
+  "total_with_tax": "Total with Tax: @total_with_tax@ SAR",
+
   "amount_in_words": "One Hundred and Five Saudi Riyals Only",
   'postal_code': 'Postal Code',
   'tax_no': 'Tax Number',
