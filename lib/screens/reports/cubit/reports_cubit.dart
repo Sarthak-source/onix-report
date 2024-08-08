@@ -74,79 +74,69 @@ class PdfFormCubit extends Cubit<PdfFormState> {
   }
 
   String convertToEnglishWords(int number) {
+    if (number == 0) return "zero";
+
     final units = [
       "",
-      "One",
-      "Two",
-      "Three",
-      "Four",
-      "Five",
-      "Six",
-      "Seven",
-      "Eight",
-      "Nine"
-    ];
-    final teens = [
-      "Eleven",
-      "Twelve",
-      "Thirteen",
-      "Fourteen",
-      "Fifteen",
-      "Sixteen",
-      "Seventeen",
-      "Eighteen",
-      "Nineteen"
+      "one",
+      "two",
+      "three",
+      "four",
+      "five",
+      "six",
+      "seven",
+      "eight",
+      "nine",
+      "ten",
+      "eleven",
+      "twelve",
+      "thirteen",
+      "fourteen",
+      "fifteen",
+      "sixteen",
+      "seventeen",
+      "eighteen",
+      "nineteen"
     ];
     final tens = [
       "",
-      "Ten",
-      "Twenty",
-      "Thirty",
-      "Forty",
-      "Fifty",
-      "Sixty",
-      "Seventy",
-      "Eighty",
-      "Ninety"
+      "",
+      "twenty",
+      "thirty",
+      "forty",
+      "fifty",
+      "sixty",
+      "seventy",
+      "eighty",
+      "ninety"
     ];
-    final thousands = ["", "Thousand", "Million", "Billion"];
-
-    if (number == 0) return "Zero";
+    final thousands = ["", "thousand", "million", "billion"];
 
     String words = "";
+    int chunkCount = 0;
 
-    int i = 0;
     while (number > 0) {
-      if (number % 1000 != 0) {
-        words =
-            "${_convertLessThanThousand(number % 1000, units, teens, tens)}${thousands[i]} $words";
+      int chunk = number % 1000;
+      if (chunk > 0) {
+        String chunkWords = "";
+        if (chunk > 99) {
+          chunkWords += "${units[chunk ~/ 100]} hundred ";
+          chunk %= 100;
+        }
+        if (chunk > 19) {
+          chunkWords += "${tens[chunk ~/ 10]} ";
+          chunk %= 10;
+        }
+        if (chunk > 0) {
+          chunkWords += "${units[chunk]} ";
+        }
+        words = "$chunkWords${thousands[chunkCount]} $words";
       }
-      number = number ~/ 1000;
-      i++;
+      number ~/= 1000;
+      chunkCount++;
     }
 
     return words.trim();
-  }
-
-  String _convertLessThanThousand(
-      int number, List<String> units, List<String> teens, List<String> tens) {
-    String words = "";
-    if (number % 100 < 20) {
-      if (number % 100 > 10) {
-        words = teens[number % 10 - 1];
-      } else {
-        words = units[number % 10];
-      }
-      number = number ~/ 10;
-    } else {
-      words = units[number % 10];
-      number = number ~/ 10;
-
-      words = "${tens[number % 10]} $words";
-      number = number ~/ 10;
-    }
-    if (number == 0) return words;
-    return "${units[number]} Hundred $words";
   }
 
   String convertToArabicWords(int number) {
@@ -1396,7 +1386,9 @@ class PdfFormCubit extends Cubit<PdfFormState> {
                   padding: const pw.EdgeInsets.symmetric(vertical: 5),
                   alignment: pw.Alignment.center,
                   child: pw.Text(
-                    totalWithTaxInWords,
+                    totalWithTaxInWords.isNotEmpty
+                        ? "${totalWithTaxInWords.substring(0, 1).toUpperCase()}${totalWithTaxInWords.substring(1, totalWithTaxInWords.length)}"
+                        : '',
                     style: pw.TextStyle(
                         font: font['regularFont'],
                         fontSize: 10,
