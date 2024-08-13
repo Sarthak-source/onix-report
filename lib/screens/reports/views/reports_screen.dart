@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart'; // Import GetX for localization
 
@@ -7,6 +10,7 @@ import '../../../core/widgets/localizations.dart';
 import '../cubit/reports_cubit.dart';
 import '../cubit/reports_state.dart';
 import '../data/model/reports.dart';
+import 'widgets/multi_slect.dart';
 
 class PdfFormWidget extends StatefulWidget {
   const PdfFormWidget({super.key});
@@ -76,7 +80,10 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
   }
 
   Future<void> _selectDate(
-      BuildContext context, TextEditingController controller) async {
+    BuildContext context,
+    TextEditingController controller,
+    Function(String) onChanged,
+  ) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -85,7 +92,9 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
     );
     if (picked != null) {
       setState(() {
+        log("${picked.toLocal()}".split(' ')[0]);
         controller.text = "${picked.toLocal()}".split(' ')[0];
+        onChanged("${picked.toLocal()}".split(' ')[0]);
       });
     }
   }
@@ -108,13 +117,17 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
       bool isNumericField,
       String? Function(String?)? validator,
       Function(String) onChanged,
-      {bool isDateField = false}) {
+      {bool isDateField = false,
+      List<TextInputFormatter>? inputFormatters}) {
+    // Added inputFormatters parameter
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
           child: GestureDetector(
-            onTap: isDateField ? () => _selectDate(context, controller) : null,
+            onTap: isDateField
+                ? () => _selectDate(context, controller, onChanged)
+                : null,
             child: AbsorbPointer(
               absorbing: isDateField,
               child: TextFormField(
@@ -122,6 +135,7 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                 controller: controller,
                 keyboardType:
                     isNumericField ? TextInputType.number : TextInputType.text,
+                inputFormatters: inputFormatters, // Use inputFormatters here
                 decoration: InputDecoration(
                   labelText: key.tr,
                   filled: true,
@@ -239,14 +253,17 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                 children: <Widget>[
                   buildRow([
                     buildTextFormField(
-                        _supplierNameController,
-                        'supplier_name',
-                        false,
-                        (value) => validateField(value,
-                            (v) => v == null || v.isEmpty, "field_required".tr),
-                        (value) => context
+                      _supplierNameController,
+                      'supplier_name',
+                      false,
+                      (value) => validateField(value,
+                          (v) => v == null || v.isEmpty, "field_required".tr),
+                      (value) {
+                        context
                             .read<PdfFormCubit>()
-                            .updateForm(supplierName: value)),
+                            .updateForm(supplierName: value);
+                      },
+                    ),
                     buildTextFormField(
                         _clientNameController,
                         'client_name', // Use key for localization
@@ -312,7 +329,10 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                             (v) => v == null || v.isEmpty, "field_required".tr),
                         (value) => context
                             .read<PdfFormCubit>()
-                            .updateForm(supplierPostalCode: value)),
+                            .updateForm(supplierPostalCode: value),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ]),
                   ]),
                   buildRow([
                     buildTextFormField(
@@ -323,7 +343,10 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                             (v) => v == null || v.isEmpty, "field_required".tr),
                         (value) => context
                             .read<PdfFormCubit>()
-                            .updateForm(supplierTaxNo: value)),
+                            .updateForm(supplierTaxNo: value),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ]),
                     buildTextFormField(
                         _supplierTaxCrnController,
                         'supplier_tax_crn', // Use key for localization
@@ -332,7 +355,10 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                             (v) => v == null || v.isEmpty, "field_required".tr),
                         (value) => context
                             .read<PdfFormCubit>()
-                            .updateForm(supplierTaxCrn: value)),
+                            .updateForm(supplierTaxCrn: value),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ]),
                     buildTextFormField(
                         _supplierOtherController,
                         'supplier_other', // Use key for localization
@@ -400,7 +426,10 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                             (v) => v == null || v.isEmpty, "field_required".tr),
                         (value) => context
                             .read<PdfFormCubit>()
-                            .updateForm(clientPostalCode: value)),
+                            .updateForm(clientPostalCode: value),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ]),
                     buildTextFormField(
                         _clientTaxNoController,
                         'client_tax_no', // Use key for localization
@@ -409,7 +438,10 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                             (v) => v == null || v.isEmpty, "field_required".tr),
                         (value) => context
                             .read<PdfFormCubit>()
-                            .updateForm(clientTaxNo: value)),
+                            .updateForm(clientTaxNo: value),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ]),
                     buildTextFormField(
                         _clientTaxCrnController,
                         'client_tax_crn', // Use key for localization
@@ -418,7 +450,10 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                             (v) => v == null || v.isEmpty, "field_required".tr),
                         (value) => context
                             .read<PdfFormCubit>()
-                            .updateForm(clientTaxCrn: value)),
+                            .updateForm(clientTaxCrn: value),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ]),
                   ]),
                   buildRow([
                     buildTextFormField(
@@ -452,22 +487,25 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                             .updateForm(dueDate: value)),
                   ]),
                   buildRow([
-                    buildDropdownFormField(
-                        _paymentMethodController,
-                        'payment_method', // Use key for localization
-                        [
-                          "cash".tr,
-                          "bank".tr,
-                          "installments".tr,
-                          "account".tr,
-                          "coupons".tr,
-                          "points".tr,
-                        ],
-                        (value) => validateField(value,
-                            (v) => v == null || v.isEmpty, "field_required".tr),
-                        (value) => context
-                            .read<PdfFormCubit>()
-                            .updateForm(paymentMethod: value)),
+                    MultiSelectDropdown(
+                      options: [
+                        "cash".tr,
+                        "bank".tr,
+                        "installments".tr,
+                        "account".tr,
+                        "coupons".tr,
+                        "points".tr,
+                      ],
+                      // Convert comma-separated string to list
+                      // Label for the field
+                      selectedValues: state.paymentMethod!.split(', ').toList(),
+
+                      label: 'payment_method'.tr,
+                      onChanged: (selectedString) {
+                        context.read<PdfFormCubit>().updateForm(
+                            paymentMethod: selectedString.join(', '));
+                      },
+                    ),
                   ]),
                   const SizedBox(
                     height: 20,
@@ -499,7 +537,10 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                                           value,
                                           (v) => v == null || v.isEmpty,
                                           "field_required".tr),
-                                      (value) {}),
+                                      (value) {},
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ]),
                                   buildTextFormField(
                                       _priceController,
                                       'price', // Use key for localization
@@ -508,7 +549,10 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                                           value,
                                           (v) => v == null || v.isEmpty,
                                           "field_required".tr),
-                                      (value) {}),
+                                      (value) {},
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ]),
                                 ]),
                                 buildRow([
                                   buildTextFormField(
@@ -519,7 +563,10 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                                           value,
                                           (v) => v == null || v.isEmpty,
                                           "field_required".tr),
-                                      (value) {}),
+                                      (value) {},
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ]),
                                   buildTextFormField(
                                       _descriptionController,
                                       'description', // Use key for localization
@@ -576,9 +623,13 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                                   (1 + item.vat / 100);
                               return DataRow(cells: [
                                 DataCell(
-                                  Text(
-                                    item.description,
-                                    textAlign: TextAlign.center,
+                                  SizedBox(
+                                    width: 200,
+                                    child: Text(
+                                      item.description,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ),
                                 DataCell(Text(
@@ -649,13 +700,13 @@ class PdfFormWidgetState extends State<PdfFormWidget> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
-                      if (!_formKey.currentState!.validate()) {
+                      if (_formKey.currentState!.validate()) {
                         await context.read<PdfFormCubit>().generatePdf(context);
                       } else {
                         Get.showSnackbar(
                           const GetSnackBar(
-                            title: 'Title', // Optional: Add a title
-                            message: 'This is a snackbar message.',
+                            title: 'Fill all Fields', // Optional: Add a title
+                            message: 'Please fill all required field',
                             duration: Duration(
                                 seconds:
                                     3), // Duration the snackbar will be displayed
